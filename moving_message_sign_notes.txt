@@ -1,0 +1,108 @@
+Moving Message Sign investigation notes
+
+2016-10-27 : power-up, lookup components
+
+Two boards: LED array board, with piggyback controller board
+Power 9VDC/AC, listed at 3A
+
+Initial power-up with 9VDC of uncased unit shows working pre-programmed display, power supply indicates draw of ~0.7A
+
+Investigating components
+
+LED array board
+
+ULN2003A (4) - peripheral driver and actuator
+74LS273P (4) - 8-bit register
+74LS138P (1) - 3-8 line demultiplexer
+74LS259B (2) - 8-bit addressable latch
+STA402A (4) - PNP darlington transistor array
+
+CSM-57211E (12) - 5x7 dot-matrix LED display (column anode, row cathode)
+
+controller/power boardIntel 8039 (8-bit MCU) - 
+Sony CXK585816RS-12L - 2K static RAM
+
+
+LS74373N - octal d-type latch
+2764 EPROM - 
+
+
+
+
+== == ==
+
+J1 pinout - top view from LED side
+
+11  1
+ o  o
+ o  o
+ o  o
+ o  o
+ o  o
+ o  o
+ o  o
+ o  o
+ o  o
+ o  o
+20 10
+
+ 1 - +VCC
+ 2 - +VCC
+ 3 - IC15 Pin 5 - 74LS138 "/G2B" input
+ 4 - IC15 Pin 1 - 74LS138 "A" input
+ 5 - IC15 Pin 2 - 74LS138 "B" input
+ 6 - IC15 Pin 3 - 74LS138 "C" input
+ 7 - IC15 Pin 4 - 74LS138 "/G2A" input
+ 8 - GND
+ 9 - GND
+10 - GND
+
+11 - +VCC
+12 - IC4,5,10,12 Pin 1  ; 74LS7273's /MR input
+   - IC11,13 Pin 15 ; 74LS259's "/CLR"  input
+
+13 - IC4,5,10,12 Pin 17 ; 74LS7273's "D6" input
+14 - IC4,5,10,12 Pin 14 ; 74LS7273's "D5" input
+15 - IC4,5,10,12 Pin 13 ; 74LS7273's "D4" input
+16 - IC4,5,10,12 Pin 8  ; 74LS273 "D3" input
+   - IC11,13 Pin 3  ; 74LS259's "S2" input
+
+17 - IC4,5,10,12 Pin 7  ; 74LS7273's "D2" input
+   - IC11,13 Pin  2 ; 74LS259's "S1" input
+
+18 - IC4,5,10,12 Pin 4 ; 74LS273's "D1" input
+   - IC11,13 Pin  1 ; 74LS259's "S0" input
+
+19 - IC4,5,10,12 Pin 3 ; 74LS7273's "D0" input
+   - IC11,13 Pin 13 ; 74LS259's "D"  input
+
+20 - GND
+
+
+== 
+
+connections
+
+IC15 pin 7 (Y7) -> IC11 pin 14 (/G)
+IC15 pin 9 (Y6) -> IC13 pin 14 (/G)
+IC15 pin 10 (Y5) -> IC12 pin 11 (CP)
+IC15 pin 11 (Y4) -> IC10 pin 11 (CP)
+IC15 pin 12 (Y3) -> IC5 pin 11 (CP)
+IC15 pin 13 (Y2) -> IC4 pin 11 (CP)
+
+
+Latch connections
+IC11 pin 4 (Q0) -> R33
+IC11 pin 5 (Q1) -> R36
+
+IC11,13 Q0-7 => STA402A inputs (4x fanout to 4x15 col LED VCC)
+
+
+LS273 <-> ULN2003A connections
+Q0(2) - 1B(1)
+Q1(5) - 2B(2)
+Q2(6) - 3B(3)
+Q3(9) - 4B(4)
+Q4(12) - 5B(5)
+Q5(15) - 6B(6)
+Q6(16) - 7B(7)
